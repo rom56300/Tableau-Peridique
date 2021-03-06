@@ -576,46 +576,6 @@ def anim(conf_elec, symbol):
 
         pygame.display.flip()
         clock.tick(288)
-
-
-def details(e):
-    pressed = False
-    start_pos = (0, 0)
-    infos = pygame.display.Info()
-    environ['SDL_VIDEO_WINDOW_POS'] = '{},{}'.format(infos.current_w // 2, infos.current_h // 2)
-
-    while True:
-        pygame.init()
-        screen = pygame.display.set_mode((window_size_x, window_size_y), pygame.NOFRAME | 256)
-        screen.fill((64, 86, 98))
-        rec = pygame.draw.rect(screen, (64, 86, 98), screen)
-        SymbolFont = pygame.font.SysFont('Comic Sans MS', 40)
-        textsurface = SymbolFont.render(e, True, (0, 0, 0))
-        textrect = textsurface.get_rect()
-        textrect.center = rec.center
-        surface.blit(textsurface, textrect)
-        pygame.display.update()
-        for event in pygame.event.get():
-            print(event)
-            if event.type == QUIT:
-                sys.exit()
-            elif event.type == 2 :
-                if event.key == 27:
-                    main()
-            elif event.type == MOUSEBUTTONDOWN:
-                pressed = True
-                start_pos = pygame.mouse.get_pos()
-
-            elif event.type == MOUSEMOTION:
-                if pressed:
-                    new_pos = pygame.mouse.get_pos()
-                    move_anim(*start_pos, *new_pos)
-                    pygame.event.clear(pygame.MOUSEBUTTONUP)
-
-            elif event.type == MOUSEBUTTONUP:
-                pressed = False
-                new_pos = pygame.mouse.get_pos()
-                move_anim(*start_pos, *new_pos)
-
-
+        
+        
 main()
