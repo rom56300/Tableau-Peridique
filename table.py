@@ -1,8 +1,10 @@
+import sys
 import time
 import pygame
-import sys
+
 from os import environ
-from pygame.locals import *
+from pygame.constants import KEYDOWN, MOUSEBUTTONDOWN, QUIT
+
 
 pygame.init()
 pygame.display.set_caption(' ')
@@ -326,8 +328,8 @@ def draw_case(i, j):
 
 
 def fill_case():
-    pygame.font.init()  # you have to call this at the start,
-    # if you want to use this module.
+    pygame.font.init()
+
     SymbolFont = pygame.font.SysFont('Comic Sans MS', 20)
     NameFont = pygame.font.SysFont('arial', 9)
     MassFont = pygame.font.SysFont('Comic Sans MS', 10)
@@ -370,7 +372,6 @@ def fill_case():
 def listen():
     while True:
         for event in pygame.event.get():
-            print(event)
             if event.type == QUIT:
                 sys.exit()
             elif event.type == MOUSEBUTTONDOWN:
@@ -388,8 +389,7 @@ def changecolor(rect):
         rec = pygame.draw.rect(surface, color[data1[rectangles.index(recta)][5]], (4 * c, 1 * c, c * 2, c * 2), 0)
         magni = rec
         current = recta
-        pygame.font.init()  # you have to call this at the start,
-        # if you want to use this module.
+        pygame.font.init()
         SymbolFont = pygame.font.SysFont('Comic Sans MS', 40)
         NameFont = pygame.font.SysFont('arial', 18)
         MassFont = pygame.font.SysFont('Comic Sans MS', 20)
@@ -473,30 +473,11 @@ class Electron(pygame.sprite.Sprite):
 
     def update(self):
         self.angle -= .25
-        # Add the rotated offset vector to the pos vector to get the rect.center.
         self.rect.center = self.pos + self.offset.rotate(self.angle)
-
-
-def move_anim(start_x, start_y, new_x, new_y):
-    global window_size_x, window_size_y
-    buffer_screen = pygame.Surface((window_size_x, window_size_y))
-    buffer_screen.blit(pygame.display.get_surface(), pygame.display.get_surface().get_rect())
-
-    window_x, window_y = eval(environ['SDL_VIDEO_WINDOW_POS'])
-    dist_x, dist_y = new_x - start_x, new_y - start_y
-    environ['SDL_VIDEO_WINDOW_POS'] = str(window_x + dist_x) + ',' + str(window_y + dist_y)
-
-    window_size_x += 1 if window_size_x % 2 == 0 else -1
-
-    screen = pygame.display.set_mode((window_size_x, window_size_y), pygame.NOFRAME)
-    screen.blit(buffer_screen, buffer_screen.get_rect())
-    pygame.display.flip()
 
 
 def anim(conf_elec, symbol):
     global rectangles
-    pressed = False
-    start_pos = (0, 0)
     infos = pygame.display.Info()
     environ['SDL_VIDEO_WINDOW_POS'] = '{},{}'.format(infos.current_w // 2, infos.current_h // 2)
     if type(conf_elec) != int:
@@ -535,27 +516,11 @@ def anim(conf_elec, symbol):
 
     while True:
         for event in pygame.event.get():
-            print(event)
             if event.type == QUIT:
                 sys.exit()
-            elif event.type == 2 or event.type == 3:
-                if event.key == 13 :
-                    details(symbol)
-                else : main()
-            elif event.type == MOUSEBUTTONDOWN:
-                pressed = True
-                start_pos = pygame.mouse.get_pos()
+            elif event.type == KEYDOWN:
+                main()
 
-            elif event.type == MOUSEMOTION:
-                if pressed:
-                    new_pos = pygame.mouse.get_pos()
-                    move_anim(*start_pos, *new_pos)
-                    pygame.event.clear(pygame.MOUSEBUTTONUP)
-
-            elif event.type == MOUSEBUTTONUP:
-                pressed = False
-                new_pos = pygame.mouse.get_pos()
-                move_anim(*start_pos, *new_pos)
         pygame.font.init()
         SymbolFont = pygame.font.SysFont('arial', 50)
         all_sprites.update()
@@ -576,6 +541,6 @@ def anim(conf_elec, symbol):
 
         pygame.display.flip()
         clock.tick(288)
-        
-        
+
+
 main()
